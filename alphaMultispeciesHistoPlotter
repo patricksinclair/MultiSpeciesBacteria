@@ -1,0 +1,25 @@
+reset
+set t pngcairo size 840, 560
+specific_alpha = '0.004884694070738408'
+alphaVal = '0.05'
+
+set title 'Multispecies Populations - alpha = '.alphaVal
+set xlabel 'Microhabitat'
+set ylabel 'Population'
+set out 'MultispeciesPopDistributions_alpha='.alphaVal.'.png'
+
+#set key noautotitle
+set key outside right top vertical Left enhanced noautotitle nobox
+set key invert
+
+set datafile missing '-'
+set style data histograms
+set style histogram rowstacked
+set style fill solid
+set boxwidth 0.75
+set xtics nomirror 
+set xrange[0:500]
+set yrange[0:655]
+
+#
+plot 'multiSpecies_popDistributions-alpha='.alphaVal.'.txt' using 2:xtic(100) title 'm=0', for [i=3:12] '' using i title 'm='.(i-2)

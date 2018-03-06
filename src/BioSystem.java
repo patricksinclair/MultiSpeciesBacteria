@@ -24,7 +24,7 @@ public class BioSystem {
         populationDead = false;
 
         for(int i = 0; i < L; i++){
-            //double c_i = Math.exp(alpha*i) - 1.;
+            double c_i = Math.exp(alpha*i) - 1.;
             //microhabitats[i] = new Microhabitat(K, c_i);
             //here this usage of alpha as c_i is just for the uniform antibiotic concentration
             microhabitats[i] = new Microhabitat(K, alpha);
@@ -84,15 +84,34 @@ public class BioSystem {
 
     public void migrate(int mh_index, int bac_index){
 
+
         //if direction > 0.5, bacteria moves forward, else backwards
         double direction = rand.nextDouble();
-        int destination_index = L+1000;
+        int destination_index = L+1234;
 
-        if(direction >= 0.5 && mh_index < L-1) destination_index = mh_index+1;
-        else if(direction < 0.5 && mh_index > 0) destination_index = mh_index-1;
+        if(mh_index == 0){
+            destination_index = 0+1;
+            microhabitats[destination_index].getPopulation().add(microhabitats[mh_index].getPopulation().remove(bac_index));
 
-        //removes a bacteria bac_index from mh_index and places it within destination_index
-        microhabitats[destination_index].getPopulation().add(microhabitats[mh_index].getPopulation().remove(bac_index));
+        }else if(mh_index == L-1){
+            destination_index = L-2;
+            microhabitats[destination_index].getPopulation().add(microhabitats[mh_index].getPopulation().remove(bac_index));
+
+        }else {
+
+            if(direction >= 0.5) {
+                destination_index = mh_index+1;
+                //removes a bacteria bac_index from mh_index and places it within destination_index
+                microhabitats[destination_index].getPopulation().add(microhabitats[mh_index].getPopulation().remove(bac_index));
+            }
+            else if(direction < 0.5) {
+                destination_index = mh_index-1;
+                microhabitats[destination_index].getPopulation().add(microhabitats[mh_index].getPopulation().remove(bac_index));
+            }
+        }
+
+
+
     }
 
     public void death(int mh_index, int bac_index){
@@ -122,7 +141,7 @@ public class BioSystem {
 
             double migration_rate = rand_bac.getB();
             double death_rate = rand_bac.getD();
-            double growth_rate = rand_bac.growthRate(c, N, K);
+            double growth_rate = rand_bac.replicationRate(c, N, K);
             double R_max = 1.2;
             double rand_chance = rand.nextDouble()*R_max;
 
@@ -136,8 +155,42 @@ public class BioSystem {
     }
 
 
-    public static void multiSpeciesDistribution(){
+    public static void multiSpeciesDistribution(double inputAlpha){
 
+        int L = 500, K = 500, nGenotypes = Bacteria.getMax_genotype() - Bacteria.getMin_genotype();
+        double duration = 100., interval = 20.;
+        //double c = inputAlpha;
+        int nReps = 10;
+        String filename = "multiSpecies_popDistributions-c="+String.valueOf(inputAlpha);
+
+
+        int[][][] repeatedPopData = new int[nReps][][];
+        ///////-STUFF HAPPENS HERE-////////////////
+        for(int r = 0; r < nReps; r++){
+            boolean alreadyRecorded = false;
+            int[][] multiSpeciesPopSizes = new int[L][];
+            BioSystem bioSystem = new BioSystem(L, K, inputAlpha);
+
+            while(bioSystem.timeElapsed <= duration){
+
+                bioSystem.performAction();
+
+                if((bioSystem.getTimeElapsed()%interval >= 0. && bioSystem.getTimeElapsed()%interval <= 0.01) && !alreadyRecorded){
+                    System.out.println("rep: "+ String.valueOf(r)+"\ttime elapsed: "+String.valueOf(bioSystem.getTimeElapsed()));
+                    alreadyRecorded = true;
+                }
+                if(bioSystem.getTimeElapsed()%interval >= 0.1 && alreadyRecorded) alreadyRecorded = false;
+            }
+            for(int i = 0; i < L; i++){
+
+                multiSpeciesPopSizes[i] = bioSystem.microhabitats[i].getAll_N_of_M();
+            }
+            repeatedPopData[r] = multiSpeciesPopSizes;
+        }
+        //////////////////////////////////////////
+
+        double[][] averagedMultiSpeciesPopSizes =  Toolbox.averagePopulationResults(repeatedPopData);
+        Toolbox.writeMultiSpeciesPopSizesToFile(filename, averagedMultiSpeciesPopSizes);
 
 
     }

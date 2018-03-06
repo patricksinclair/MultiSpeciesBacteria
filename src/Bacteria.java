@@ -38,13 +38,13 @@ public class Bacteria {
 
     public double phi_c(double c){
         double phi_c = 1. - (c/beta())*(c/beta());
-        return (phi_c > 0) ? phi_c : 0.;
+        return  (phi_c > 0.) ? phi_c : 0.;
     }
 
     //this growth rate is the same as the PRL paper, which relies on a Karrying Kapacity rather than nutrients
-    public double growthRate(double c, double N, double K){
+    public double replicationRate(double c, double N, double K){
         double gRate = phi_c(c)*(1. - N/K);
-        return (gRate > 0) ? gRate : 0.;
+        return  (gRate > 0.) ? gRate : 0.;
     }
 
 
