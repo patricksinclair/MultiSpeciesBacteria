@@ -1,7 +1,7 @@
 reset
 set t pngcairo size 840, 560
 
-cVal = '2.0'
+cVal = '12.0'
 set title 'Multispecies Populations - c = '.cVal
 set xlabel 'Microhabitat'
 set ylabel 'Population'

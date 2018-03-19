@@ -3,7 +3,7 @@ public class Bacteria {
     //genotype of the bacteria
     private int m;
     private static int min_genotype = 0, max_genotype = 10;
-    private double d = 0.0, b = 0.2;
+    private double d = 0.1, b = 0.1;
 
     public Bacteria(int m){
         this.m  = m;

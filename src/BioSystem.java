@@ -25,9 +25,9 @@ public class BioSystem {
 
         for(int i = 0; i < L; i++){
             double c_i = Math.exp(alpha*i) - 1.;
-            //microhabitats[i] = new Microhabitat(K, c_i);
+            microhabitats[i] = new Microhabitat(K, c_i);
             //here this usage of alpha as c_i is just for the uniform antibiotic concentration
-            microhabitats[i] = new Microhabitat(K, alpha);
+            //microhabitats[i] = new Microhabitat(K, alpha);
             microhabitats[i].addSomeRandoms(initialRandPop);
         }
     }
@@ -97,7 +97,7 @@ public class BioSystem {
             destination_index = L-2;
             microhabitats[destination_index].getPopulation().add(microhabitats[mh_index].getPopulation().remove(bac_index));
 
-        }else {
+        }else{
 
             if(direction >= 0.5) {
                 destination_index = mh_index+1;
@@ -129,42 +129,42 @@ public class BioSystem {
 
     public void performAction(){
 
-        if(!populationDead){
-            int randomIndex = rand.nextInt(getCurrentPopulation());
-            int[] indexes = getRandomIndexes(randomIndex);
-            int mh_index = indexes[0];
-            int bac_index = indexes[1];
+        int randomIndex = rand.nextInt(getCurrentPopulation());
+        int[] indexes = getRandomIndexes(randomIndex);
+        int mh_index = indexes[0];
+        int bac_index = indexes[1];
 
-            Microhabitat rand_mh = microhabitats[mh_index];
-            Bacteria rand_bac = rand_mh.getABacteria(bac_index);
-            double c = rand_mh.getC(), N = (double)rand_mh.getN(), K = (double)rand_mh.getK();
+        Microhabitat rand_mh = microhabitats[mh_index];
+        Bacteria rand_bac = rand_mh.getABacteria(bac_index);
+        double c = rand_mh.getC(), N = (double)rand_mh.getN(), K = (double)rand_mh.getK();
 
-            double migration_rate = rand_bac.getB();
-            double death_rate = rand_bac.getD();
-            double growth_rate = rand_bac.replicationRate(c, N, K);
-            double R_max = 1.2;
-            double rand_chance = rand.nextDouble()*R_max;
+        double migration_rate = rand_bac.getB();
+        double death_rate = rand_bac.getD();
+        double growth_rate = rand_bac.replicationRate(c, N, K);
+        double R_max = 1.2;
+        double rand_chance = rand.nextDouble()*R_max;
 
-            if(rand_chance <= migration_rate) migrate(mh_index, bac_index);
-            else if(rand_chance > migration_rate && rand_chance <= (migration_rate + death_rate)) death(mh_index, bac_index);
-            else if(rand_chance > (migration_rate + death_rate) && rand_chance <= (migration_rate + death_rate + growth_rate))
-            {replicate(mh_index, bac_index);}
+        if(rand_chance <= migration_rate) migrate(mh_index, bac_index);
+        else if(rand_chance > migration_rate && rand_chance <= (migration_rate + death_rate)) death(mh_index, bac_index);
+        else if(rand_chance > (migration_rate + death_rate) && rand_chance <= (migration_rate + death_rate + growth_rate))
+        {replicate(mh_index, bac_index);}
 
-            timeElapsed += 1./((double)getCurrentPopulation()*R_max);
-        }
+        timeElapsed += 1./((double)getCurrentPopulation()*R_max);
+
     }
 
 
     public static void multiSpeciesDistribution(double inputAlpha){
 
         int L = 500, K = 500, nGenotypes = Bacteria.getMax_genotype() - Bacteria.getMin_genotype();
-        double duration = 100., interval = 20.;
+        double duration = 400., interval = 20.;
         //double c = inputAlpha;
         int nReps = 10;
-        String filename = "multiSpecies_popDistributions-c="+String.valueOf(inputAlpha);
-
+        String filename = "multiSpecies_popDistributions-c="+String.valueOf(inputAlpha)+"-death";
 
         int[][][] repeatedPopData = new int[nReps][][];
+
+
         ///////-STUFF HAPPENS HERE-////////////////
         for(int r = 0; r < nReps; r++){
             boolean alreadyRecorded = false;
@@ -191,7 +191,6 @@ public class BioSystem {
 
         double[][] averagedMultiSpeciesPopSizes =  Toolbox.averagePopulationResults(repeatedPopData);
         Toolbox.writeMultiSpeciesPopSizesToFile(filename, averagedMultiSpeciesPopSizes);
-
 
     }
 

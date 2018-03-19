@@ -66,13 +66,13 @@ public class Toolbox {
 
         for(int l = 0; l < L; l++){
 
-            averagedResults[l][0] = (double)l*100.;
+            //averagedResults[l][0] = (double)l*100.;
 
             for(int m = 0; m < M; m++){
 
                 double runningTotal = 0.;
                 for(int r = 0; r < nReps; r++){
-                    runningTotal += inputPops[r][l][m];
+                    runningTotal += (double)inputPops[r][l][m];
                 }
                 averagedResults[l][m] = runningTotal/(double)nReps;
             }

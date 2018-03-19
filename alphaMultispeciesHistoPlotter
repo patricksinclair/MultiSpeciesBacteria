@@ -1,12 +1,12 @@
 reset
-set t pngcairo size 840, 560
+set t pngcairo size 840, 560 enhanced
 specific_alpha = '0.004884694070738408'
-alphaVal = '0.05'
+alphaVal = specific_alpha
 
-set title 'Multispecies Populations - alpha = '.alphaVal
+set title 'Multispecies Populations - α = '.alphaVal
 set xlabel 'Microhabitat'
 set ylabel 'Population'
-set out 'MultispeciesPopDistributions_alpha='.alphaVal.'.png'
+set out 'MultispeciesPopDistributions_alpha='.alphaVal.'-no_death.png'
 
 #set key noautotitle
 set key outside right top vertical Left enhanced noautotitle nobox
@@ -22,4 +22,7 @@ set xrange[0:500]
 set yrange[0:655]
 
 #
-plot 'multiSpecies_popDistributions-alpha='.alphaVal.'.txt' using 2:xtic(100) title 'm=0', for [i=3:12] '' using i title 'm='.(i-2)
+plot 'multiSpecies_popDistributions-alpha='.alphaVal.'-no_death.txt' using 2:xtic(100) title 'm=0', for [i=3:12] '' using i title 'm='.(i-2)
+
+
+

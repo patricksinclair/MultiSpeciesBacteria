@@ -5,26 +5,7 @@ public class MultiSpeciesMain {
     public static void main(String[] args){
 
         double specific_alpha = Math.log(11.5)/500.;
-        BioSystem.multiSpeciesDistribution(5.);
-/*
-        ArrayList<Double> a = new ArrayList<>();
-        ArrayList<Double> b = new ArrayList<>();
-
-        for(int i = 0; i < 10; i++){
-            a.add((double)i);
-            b.add((double)i*10.);
-        }
-
-        for(double i : a){
-            System.out.println(i);
-        }
-
-        System.out.println(Arrays.toString(a.toArray()));
-        System.out.println(Arrays.toString(b.toArray()));
-
-        a.add(b.remove(3));
-
-        System.out.println(Arrays.toString(a.toArray()));
-        System.out.println(Arrays.toString(b.toArray()));*/
+        //BioSystem.multiSpeciesDistribution(2.);
+        BioFrame bf = new BioFrame(); bf.setVisible(true);
     }
 }
