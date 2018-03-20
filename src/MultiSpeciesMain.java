@@ -6,6 +6,7 @@ public class MultiSpeciesMain {
 
         double specific_alpha = Math.log(11.5)/500.;
         //BioSystem.multiSpeciesDistribution(2.);
-        BioFrame bf = new BioFrame(); bf.setVisible(true);
+        //BioFrame bf = new BioFrame(); bf.setVisible(true);
+        BioSystem.timeTillResistance(0.05);
     }
 }

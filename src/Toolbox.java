@@ -2,8 +2,47 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Toolbox {
+
+    public static double[] convertArrayListToPrimitiveArray(ArrayList<Double> inputData){
+        double[] outputData = new double[inputData.size()];
+
+        for(int i = 0; i < inputData.size(); i++){
+            outputData[i] = inputData.get(i);
+        }
+        return outputData;
+    }
+
+
+
+    public static double[] averagedJaggedResults(double[][] inputData){
+
+        int nReps = inputData.length;
+        int maxColVals = 0;
+        for(int i = 0; i < inputData.length; i++){
+            if(inputData[i].length > maxColVals)
+                maxColVals = inputData[i].length;
+        }
+
+        double[] outputData = new double[maxColVals];
+        double[] tData = new double[maxColVals];
+
+        for(int i = 0; i < maxColVals; i++){
+            double sum = 0.;
+            double nVals = 0;
+            for(int j = 0; j < inputData.length; j++){
+                if(i < inputData[j].length){
+                    sum += inputData[j][i];
+                    nVals += 1.;
+                }
+            }
+            outputData[i] = sum/nVals;
+            //tData[i] = (double)i*interval;
+        }
+        return outputData;
+    }
 
     public static void writeMultiSpeciesPopSizesToFile(String filename, int[][] multiSpeciesData){
 
@@ -79,5 +118,26 @@ public class Toolbox {
 
         }
         return averagedResults;
+    }
+
+
+    public static void writeTwoArraysToFile(String filename, double[] xdata, double[] ydata){
+
+        try{
+            File file = new File(filename+".txt");
+            if(!file.exists()) file.createNewFile();
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            for(int i = 0; i < xdata.length; i++){
+                String output = String.valueOf(xdata[i])+" "+String.valueOf(ydata[i]);
+
+                bw.write(output);
+                bw.newLine();
+            }
+            bw.close();
+        }catch (IOException e){}
+
     }
 }

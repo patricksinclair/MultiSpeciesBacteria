@@ -13,7 +13,7 @@ public class BioSystem {
 
     private double timeElapsed;
     private int initialRandPop = 100;
-    private boolean populationDead;
+    private boolean populationDead, resistorsDominant;
 
     public BioSystem(int L, int K, double alpha){
         this.L = L;
@@ -43,6 +43,35 @@ public class BioSystem {
     public void setAlpha(double alpha){this.alpha = alpha;}
 
     public double getTimeElapsed(){return timeElapsed;}
+
+
+    public double percentageOfResistors(){
+        int resistantM = 10;
+        int nResistors = 0;
+        int totalPopulation = getCurrentPopulation();
+
+        for(int i =0; i < L; i++){
+            nResistors += microhabitats[i].getN_of_M(resistantM);
+        }
+
+        return (double)nResistors/(double)totalPopulation;
+    }
+
+    public boolean areResistorsDominant(){
+        double tolerance = 0.9;
+        int resistantM = 10;
+        int nResistors = 0;
+        int totalPopulation = getCurrentPopulation();
+
+        for(int i =0; i < L; i++){
+            nResistors += microhabitats[i].getN_of_M(resistantM);
+        }
+
+        if((double)nResistors/(double)totalPopulation >= tolerance) return true;
+        else return false;
+
+    }
+
 
     //returns the total number of bacteria in the system
     public int getCurrentPopulation(){
@@ -194,5 +223,49 @@ public class BioSystem {
 
     }
 
+
+    public static void timeTillResistance(double inputAlpha){
+
+        int L = 500, K = 500;
+        double interval = 20.;
+        int nReps = 10;
+        String filename = "timeTillResistance_alpha="+String.valueOf(inputAlpha);
+
+        double[][] percentageResistData = new double[nReps][];
+        double[][] timeResistData = new double[nReps][];
+
+        for(int r = 0; r < nReps; r++) {
+
+            BioSystem bioSystem = new BioSystem(L, K, inputAlpha);
+            boolean alreadyRecorded = false;
+            ArrayList<Double> tData = new ArrayList<>();
+            ArrayList<Double> percentResData = new ArrayList<>();
+
+            whileloop:
+            while(true) {
+                bioSystem.performAction();
+
+                if((bioSystem.getTimeElapsed()%interval >= 0. && bioSystem.getTimeElapsed()%interval <= 0.01) && !alreadyRecorded) {
+
+                    System.out.println("rep: "+String.valueOf(r)+"\ttime elapsed: " + String.valueOf(bioSystem.getTimeElapsed()) + "\tpercentage resistors: " + String.valueOf(bioSystem.percentageOfResistors()));
+                    tData.add(bioSystem.getTimeElapsed());
+                    percentResData.add(bioSystem.percentageOfResistors());
+
+                    if(bioSystem.areResistorsDominant()) break whileloop;
+                    alreadyRecorded = true;
+                }
+                if(bioSystem.getTimeElapsed()%interval >= 0.1 && alreadyRecorded) alreadyRecorded = false;
+
+            }
+
+            timeResistData[r] = Toolbox.convertArrayListToPrimitiveArray(tData);
+            percentageResistData[r] = Toolbox.convertArrayListToPrimitiveArray(percentResData);
+            System.out.println("resistance achieved in: " + String.valueOf(bioSystem.timeElapsed));
+        }
+
+        double[] averagedTimeData = Toolbox.averagedJaggedResults(timeResistData);
+        double[] averagedPercentageResData = Toolbox.averagedJaggedResults(percentageResistData);
+        Toolbox.writeTwoArraysToFile(filename, averagedTimeData, averagedPercentageResData);
+    }
 
 }
