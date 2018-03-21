@@ -232,6 +232,7 @@ public class BioSystem {
         String filename = "timeTillResistance_alpha="+String.valueOf(inputAlpha);
 
         double[][] percentageResistData = new double[nReps][];
+        double[][] populationSizeData = new double[nReps][];
         double[][] timeResistData = new double[nReps][];
 
         for(int r = 0; r < nReps; r++) {
@@ -240,6 +241,7 @@ public class BioSystem {
             boolean alreadyRecorded = false;
             ArrayList<Double> tData = new ArrayList<>();
             ArrayList<Double> percentResData = new ArrayList<>();
+            ArrayList<Double> popSizeData = new ArrayList<>();
 
             whileloop:
             while(true) {
@@ -250,6 +252,7 @@ public class BioSystem {
                     System.out.println("rep: "+String.valueOf(r)+"\ttime elapsed: " + String.valueOf(bioSystem.getTimeElapsed()) + "\tpercentage resistors: " + String.valueOf(bioSystem.percentageOfResistors()));
                     tData.add(bioSystem.getTimeElapsed());
                     percentResData.add(bioSystem.percentageOfResistors());
+                    popSizeData.add((double)bioSystem.getCurrentPopulation());
 
                     if(bioSystem.areResistorsDominant()) break whileloop;
                     alreadyRecorded = true;
@@ -260,12 +263,14 @@ public class BioSystem {
 
             timeResistData[r] = Toolbox.convertArrayListToPrimitiveArray(tData);
             percentageResistData[r] = Toolbox.convertArrayListToPrimitiveArray(percentResData);
+            populationSizeData[r] = Toolbox.convertArrayListToPrimitiveArray(popSizeData);
             System.out.println("resistance achieved in: " + String.valueOf(bioSystem.timeElapsed));
         }
 
         double[] averagedTimeData = Toolbox.averagedJaggedResults(timeResistData);
         double[] averagedPercentageResData = Toolbox.averagedJaggedResults(percentageResistData);
-        Toolbox.writeTwoArraysToFile(filename, averagedTimeData, averagedPercentageResData);
+        double[] averagedPopulationSizeData = Toolbox.averagedJaggedResults(populationSizeData);
+        Toolbox.writeThreeArraysToFile(filename, averagedTimeData, averagedPercentageResData, averagedPopulationSizeData);
     }
 
 }

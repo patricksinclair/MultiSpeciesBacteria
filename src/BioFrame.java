@@ -92,7 +92,7 @@ class BioPanel extends JPanel {
 
 public class BioFrame extends JFrame{
 
-    int L = 500, K = 500;
+    int L = 500, K = 256;
     double alpha = 0.02;
 
     BioPanel bioPan;
@@ -110,7 +110,7 @@ public class BioFrame extends JFrame{
         bioSys = new BioSystem(L, K, alpha);
 
         bioPan = new BioPanel(bioSys);
-        bioPan.setPreferredSize(new Dimension(1000, 700));
+        bioPan.setPreferredSize(new Dimension(1000, 512));
 
         JPanel controlPanel = new JPanel();
         controlPanel.add(goButton);

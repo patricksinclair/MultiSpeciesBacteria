@@ -140,4 +140,23 @@ public class Toolbox {
         }catch (IOException e){}
 
     }
+
+    public static void writeThreeArraysToFile(String filename, double[] xdata, double[] ydata1, double[] ydata2){
+
+        try{
+            File file = new File(filename+".txt");
+            if(!file.exists()) file.createNewFile();
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            for(int i = 0; i < xdata.length; i++){
+                String output = String.valueOf(xdata[i])+" "+String.valueOf(ydata1[i])+" "+String.valueOf(ydata2[i]);
+
+                bw.write(output);
+                bw.newLine();
+            }
+            bw.close();
+        }catch (IOException e){}
+    }
 }
