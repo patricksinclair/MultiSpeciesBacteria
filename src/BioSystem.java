@@ -228,8 +228,8 @@ public class BioSystem {
 
         int L = 500, K = 500;
         double interval = 20.;
-        int nReps = 10;
-        String filename = "timeTillResistance_alpha="+String.valueOf(inputAlpha);
+        int nReps = 20;
+        String filename = "timeTillResistance_and_popSize-alpha="+String.valueOf(inputAlpha);
 
         double[][] percentageResistData = new double[nReps][];
         double[][] populationSizeData = new double[nReps][];
